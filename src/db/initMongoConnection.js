@@ -1,17 +1,43 @@
-import mongoose from 'mongoose';
-import { env } from '../utils/env.js';
+// import mongoose from 'mongoose';
+// import dotenv from 'dotenv';
 
-export const initMongoConnection = async () => {
+// dotenv.config();
+
+// const DB_URI = process.env.MONGODB_URI;
+
+// console.log('Loaded MongoDB URI:', process.env.MONGODB_URI);
+
+// const initMongoConnection = async () => {
+//   const DB_URI = process.env.MONGODB_URI;
+//   try {
+//     await mongoose.connect(DB_URI);
+//     console.log('MongoDB connected...');
+//   } catch (error) {
+//     console.error('MongoDB connection failed', error);
+//     process.exit(1);
+//   }
+// };
+
+// export default initMongoConnection;
+
+
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const DB_URI = process.env.MONGODB_URI;
+
+console.log('Loaded MongoDB URI:', DB_URI);
+
+const initMongoConnection = async () => {
   try {
-    const user = env('MONGODB_USER');
-    const pwd = env('MONGODB_PASSWORD');
-    const url = env('MONGODB_URL');
-    const db = env('MONGODB_DB');
-    await mongoose.connect(
-      `mongodb+srv://${user}:${pwd}@${url}/${db}`,
-    );
-    console.log('Mongo connection successfully established!');
+    await mongoose.connect(DB_URI);
+    console.log('MongoDB connected...');
   } catch (error) {
-    console.error('Mongo connection error:', error);
+    console.error('MongoDB connection failed', error);
+    process.exit(1);
   }
 };
+
+export default initMongoConnection;
