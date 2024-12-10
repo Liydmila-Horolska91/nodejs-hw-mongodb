@@ -26,7 +26,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const DB_URI = process.env.MONGODB_URI;
+const DB_URI = process.env.MONGODB_URL;
 
 console.log('Loaded MongoDB URI:', DB_URI);
 
