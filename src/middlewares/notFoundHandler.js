@@ -1,5 +1,5 @@
-const notFoundHandler = (req, res, next) => {
-  res.status(404).json({ message: 'Resource not found' });
-};
+import createHttpError from "http-errors";
 
-export default notFoundHandler;
+export function notFoundHandler(req, res, next) {
+  throw new createHttpError.NotFound("Route not found");
+}

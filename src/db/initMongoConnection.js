@@ -1,23 +1,8 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import mongoose from "mongoose";
 
-dotenv.config();
-const DB_URI = process.env.MONGODB_URI;
+const DB_URI = `mongodb+srv://<db_username>:<db_password>@cluster0.ripq7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-console.log('Loaded MongoDB URI:', DB_URI);  // Перевірка URI в консолі
-
-const initMongoConnection = async () => {
-  try {
-    if (!DB_URI) {
-      throw new Error('MongoDB URI is not defined');
-    }
-
-    await mongoose.connect(DB_URI);
-    console.log('MongoDB connected...');
-  } catch (error) {
-    console.error('MongoDB connection failed', error);
-    process.exit(1);  // Завершення процесу з помилкою
-  }
-};
-
-export default initMongoConnection;
+export async function initMongoConnection() {
+  await mongoose.connect(DB_URI);
+  console.log("Mongo connection successfully established!");
+}

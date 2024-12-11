@@ -1,10 +1,14 @@
-import dotenv from 'dotenv';
-import initMongoConnection from './db/initMongoConnection.js';
-import setupServer from './server.js';
+import "dotenv/config";
+import { setupServer } from "./server.js";
+import { initMongoConnection } from "./db/initMongoConnection.js";
 
-dotenv.config();
-console.log('MongoDB URI:', process.env.MONGODB_URI);
+async function bootstrap() {
+  try {
+    await initMongoConnection();
+    setupServer();
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-initMongoConnection().then(() => {
-  setupServer();
-});
+bootstrap();
