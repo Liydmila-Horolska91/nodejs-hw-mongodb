@@ -5,7 +5,7 @@ import router from "./routers/contacts.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5001;
 
 export function setupServer() {
   const app = express();
