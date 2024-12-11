@@ -1,8 +1,17 @@
 import mongoose from "mongoose";
 
-const DB_URI = `mongodb+srv://<db_username>:<db_password>@cluster0.ripq7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const initMongoConnection = async () => {
+  try {
+    if (!process.env.DB_URI) {
+      throw new Error("DB_URI is not defined in the .env file");
+    }
 
-export async function initMongoConnection() {
-  await mongoose.connect(DB_URI);
-  console.log("Mongo connection successfully established!");
-}
+    await mongoose.connect(process.env.DB_URI); // Видалено застарілі опції
+    console.log("Database connected successfully");
+  } catch (error) {
+    console.error("Database connection error:", error.message);
+    process.exit(1); // Завершити процес у разі помилки
+  }
+};
+
+export default initMongoConnection;
