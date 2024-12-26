@@ -1,12 +1,7 @@
 import { SORT_ORDER } from '../constans/index.js';
-import Contact from '../models/contact.js';
+import Contact from '../models/contacts.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-// const clearFilter = (filter) => {
-//   return Object.fromEntries(
-//     Object.entries(filter).filter(([_, value]) => value !== undefined),
-//   );
-// };
 
 const getAllContacts = async ({
   page = 1,
