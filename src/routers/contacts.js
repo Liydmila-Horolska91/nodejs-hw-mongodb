@@ -9,13 +9,12 @@ import {
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { contactSchema, editContactSchema } from '../validation/contact.js';
-import { authenticate } from '../middlewares/authenticate.js';
+import { contactSchema, replaceContactSchema } from '../validation/contact.js'; // Змінено на replaceContactSchema
 import { upload } from '../middlewares/multer.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 router.use(authenticate);
-// const jsonParser = express.json();
 
 router.get('/', ctrlWrapper(getContactsCtrl));
 router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdCtrl));
@@ -34,7 +33,7 @@ router.patch(
   '/:contactId',
   isValidId,
   upload.single('photo'),
-  validateBody(editContactSchema),
+  validateBody(replaceContactSchema),
   ctrlWrapper(patchContactCtrl),
 );
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactCtrl));
