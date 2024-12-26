@@ -1,44 +1,49 @@
-import express from "express";
-import { ctrlWrapper } from "../utils/ctrlWrapper.js";
+import { Router } from 'express';
+import { validateBody } from '../middlewares/validateBody.js';
 import {
-  registerController,
-  loginController,
-  logoutController,
-  refreshController,
-  requestResetPasswordController,
-  resetPasswordController,
-} from "../controllers/auth.js";
-import { validateBody } from "../middlewares/validateBody.js";
-import {
-  registerSchema,
-  loginSchema,
-  requestResetPasswordSchema,
+  registerUserSchema,
+  loginUserSchema,
+  requestResetEmailSchema,
   resetPasswordSchema,
-} from "../validation/auth.js";
+} from '../validation/auth.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import {
+  registerUserCtrl,
+  loginUserCtrl,
+  refreshSessionCtrl,
+  logoutUserCtrl,
+  requestResetEmailCtrl,
+  resetPasswordCtrl,
+} from '../controllers/auth.js';
 
-const router = express.Router();
-const jsonParser = express.json();
-
-router.post("/register", jsonParser, validateBody(registerSchema), ctrlWrapper(registerController));
-
-router.post("/login", jsonParser, validateBody(loginSchema), ctrlWrapper(loginController));
-
-router.post("/logout", ctrlWrapper(logoutController));
-
-router.post("/refresh", ctrlWrapper(refreshController));
+const router = Router();
 
 router.post(
-  "/send-reset-email",
-  jsonParser,
-  validateBody(requestResetPasswordSchema),
-  ctrlWrapper(requestResetPasswordController),
+  '/register',
+  validateBody(registerUserSchema),
+  ctrlWrapper(registerUserCtrl),
 );
 
 router.post(
-  "/reset-pwd",
-  jsonParser,
+  '/login',
+  validateBody(loginUserSchema),
+  ctrlWrapper(loginUserCtrl),
+);
+
+router.post('/refresh', ctrlWrapper(refreshSessionCtrl));
+
+router.post('/logout', ctrlWrapper(logoutUserCtrl));
+
+router.post(
+  '/send-reset-email',
+  validateBody(requestResetEmailSchema),
+  ctrlWrapper(requestResetEmailCtrl),
+);
+
+router.post(
+  '/reset-pwd',
   validateBody(resetPasswordSchema),
-  ctrlWrapper(resetPasswordController),
+  ctrlWrapper(resetPasswordCtrl),
 );
 
 export default router;

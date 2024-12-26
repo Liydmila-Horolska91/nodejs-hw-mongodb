@@ -1,27 +1,20 @@
-// import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-// const initMongoConnection = async () => {
-//   try {
-//     if (!process.env.DB_URI) {
-//       throw new Error("DB_URI is not defined in the .env file");
-//     }
-
-//     await mongoose.connect(process.env.DB_URI); // Видалено застарілі опції
-//     console.log("Database connected successfully");
-//   } catch (error) {
-//     console.error("Database connection error:", error.message);
-//     process.exit(1); // Завершити процес у разі помилки
-//   }
-// };
-
-// export default initMongoConnection;
-
-
-import mongoose from "mongoose";
+dotenv.config();
 
 const DB_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_URL}/${process.env.MONGODB_DB}?retryWrites=true&w=majority&appName=Cluster0`;
 
-export async function initMongoConnection() {
-  await mongoose.connect(DB_URI);
-  console.log("Mongo connection successfully established!");
-}
+console.log('Loaded MongoDB URI:', DB_URI);
+
+const initMongoConnection = async () => {
+  try {
+    await mongoose.connect(DB_URI);
+    console.log('MongoDB connected...');
+  } catch (error) {
+    console.error('MongoDB connection failed', error);
+    process.exit(1);
+  }
+};
+
+export default initMongoConnection;

@@ -1,37 +1,46 @@
-import createHttpError from "http-errors";
-import { Session } from "../models/session.js";
-import { User } from "../models/user.js";
+import createHttpError from 'http-errors';
+import { Session } from '../models/session.js';
+import { User } from '../models/user.js';
 
-export async function authenticate(req, res, next) {
-  const { authorization } = req.headers;
+export const authenticate = async (req, res, next) => {
+  const authHeader = req.get('Authorization');
 
-  if (typeof authorization !== "string") {
-    return next(createHttpError(401, "Please provide an access token"));
+  if (!authHeader) {
+    next(createHttpError(401, 'Please provide Authorization header'));
+    return;
   }
 
-  const [bearer, accessToken] = authorization.split(" ", 2);
+  const bearer = authHeader.split(' ')[0];
+  const token = authHeader.split(' ')[1];
 
-  if (bearer !== "Bearer" || typeof accessToken !== "string") {
-    return next(createHttpError(401, "Please provide an access token"));
+  if (bearer !== 'Bearer' || !token) {
+    next(createHttpError(401, 'Auth header should be of type Bearer'));
+    return;
   }
 
-  const session = await Session.findOne({ accessToken });
+  const session = await Session.findOne({
+    accessToken: token,
+  });
 
-  if (session === null) {
-    return next(createHttpError(401, "Session is not found"));
+  if (!session) {
+    next(createHttpError(401, 'Session not found'));
+    return;
   }
 
-  if (session.accessTokenValidUntil < new Date()) {
-    return next(createHttpError(401, "Access token expired"));
+  const isAccessTokenExpired =
+    new Date() > new Date(session.accessTokenValidUntil);
+  if (isAccessTokenExpired) {
+    next(createHttpError(401, 'Access token expired'));
   }
 
   const user = await User.findById(session.userId);
 
-  if (user === null) {
-    return next(createHttpError(401, "User is not found"));
+  if (!user) {
+    next(createHttpError(401));
+    return;
   }
 
-  req.user = { id: user._id, name: user.name };
+  req.user = user;
 
   next();
-}
+};
