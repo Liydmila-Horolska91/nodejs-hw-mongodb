@@ -1,14 +1,24 @@
-import "dotenv/config";
-import { setupServer } from "./server.js";
-import { initMongoConnection } from "./db/initMongoConnection.js";
+// import dotenv from 'dotenv';
+// import initMongoConnection from './db/initMongoConnection.js';
+// import setupServer from './server.js';
 
-async function bootstrap() {
-  try {
-    await initMongoConnection();
+// dotenv.config();
+
+// initMongoConnection().then(() => {
+//   setupServer();
+// });
+
+
+import dotenv from 'dotenv';
+import initMongoConnection from './db/initMongoConnection.js';
+import setupServer from './server.js';
+
+dotenv.config();
+
+initMongoConnection()
+  .then(() => {
     setupServer();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-bootstrap();
+  })
+  .catch((error) => {
+    console.error("Failed to connect to MongoDB:", error.message);
+  });
