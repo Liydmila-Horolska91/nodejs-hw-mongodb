@@ -1,21 +1,14 @@
-import dotenv from 'dotenv';
-import initMongoConnection from './db/initMongoConnection.js';
-import setupServer from './server.js';
+import "dotenv/config";
+import { setupServer } from "./server.js";
+import { initMongoConnection } from "./db/initMongoConnection.js";
 
-dotenv.config();
+async function bootstrap() {
+  try {
+    await initMongoConnection();
+    setupServer();
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-initMongoConnection().then(() => {
-  setupServer();
-});
-
-// const bootstrap = async () => {
-//   try {
-//     await initMongoConnection();
-//     setupServer();
-//   } catch (error) {
-//     console.error('Initialization failed:', error);
-//     process.exit(1);
-//   }
-// };
-
-// void bootstrap();
+bootstrap();
