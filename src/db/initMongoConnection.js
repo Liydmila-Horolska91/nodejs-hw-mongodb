@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Ваш MongoDB URI
+// MongoDB URI
 const DB_URI = `mongodb+srv://Ludmila:1991LudaHo@cluster0.ripq7.mongodb.net/stage?retryWrites=true&w=majority`;
 
 async function initMongoConnection() {
@@ -12,4 +12,4 @@ async function initMongoConnection() {
   }
 }
 
-export default initMongoConnection; // Експорт за замовчуванням
+export default initMongoConnection;

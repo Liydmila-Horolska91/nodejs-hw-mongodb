@@ -2,15 +2,12 @@ import cloudinary from 'cloudinary';
 import fs from 'node:fs/promises';
 import dotenv from 'dotenv';
 
-// Завантаження змінних оточення з файлу .env
 dotenv.config();
 
-// Перевірка наявності конфігурації Cloudinary
 if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
   throw new Error('Cloudinary configuration is missing');
 }
 
-// Налаштування Cloudinary
 cloudinary.v2.config({
   secure: true,
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,7 +15,7 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Функція для видалення файлу
+
 const deleteFile = async (filePath) => {
   try {
     await fs.unlink(filePath);
@@ -29,7 +26,7 @@ const deleteFile = async (filePath) => {
   }
 };
 
-// Функція для збереження файлу в Cloudinary
+
 export const saveFileToCloudinary = async (file, folder = 'uploads') => {
   if (!file || !file.path) {
     throw new Error('File is not provided or invalid');
@@ -37,7 +34,7 @@ export const saveFileToCloudinary = async (file, folder = 'uploads') => {
 
   try {
     const response = await cloudinary.v2.uploader.upload(file.path, { folder });
-    console.log('Cloudinary upload response:', response); // Для дебагінгу
+    console.log('Cloudinary upload response:', response);
     await deleteFile(file.path);
     return response.secure_url;
   } catch (error) {
