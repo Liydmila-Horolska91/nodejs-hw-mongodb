@@ -2,11 +2,6 @@ import { SORT_ORDER } from '../constans/index.js';
 import Contact from '../models/contact.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 
-// const clearFilter = (filter) => {
-//   return Object.fromEntries(
-//     Object.entries(filter).filter(([_, value]) => value !== undefined),
-//   );
-// };
 
 const getAllContacts = async ({
   page = 1,
@@ -21,7 +16,7 @@ const getAllContacts = async ({
   const contactsQuery = Contact.find({ userId: filter.userId });
 
   if (filter.name) {
-    contactsQuery.where('name').equals(filter.name);
+    contactsQuery.where('name').regex(new RegExp(filter.name, 'i'));
   }
   if (filter.phoneNumber) {
     contactsQuery.where('phoneNumber').regex(new RegExp(filter.phoneNumber));
