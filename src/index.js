@@ -4,10 +4,7 @@ import setupServer from './server.js';
 
 dotenv.config();
 
-initMongoConnection()
-  .then(() => {
-    setupServer();
-  })
-  .catch((error) => {
-    console.error("Failed to connect to MongoDB:", error.message);
-  });
+initMongoConnection().then(() => {
+  setupServer();
+});
+

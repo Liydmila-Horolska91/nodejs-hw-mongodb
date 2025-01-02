@@ -1,20 +1,18 @@
+
 import cloudinary from 'cloudinary';
+import { CLOUDINARY } from '../constans/index.js';
 import fs from 'node:fs/promises';
-import dotenv from 'dotenv';
 
-dotenv.config();
-
-if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+if (!CLOUDINARY.CLOUD_NAME || !CLOUDINARY.API_KEY || !CLOUDINARY.API_SECRET) {
   throw new Error('Cloudinary configuration is missing');
 }
 
 cloudinary.v2.config({
   secure: true,
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: CLOUDINARY.CLOUD_NAME,
+  api_key: CLOUDINARY.API_KEY,
+  api_secret: CLOUDINARY.API_SECRET,
 });
-
 
 const deleteFile = async (filePath) => {
   try {
@@ -26,7 +24,6 @@ const deleteFile = async (filePath) => {
   }
 };
 
-
 export const saveFileToCloudinary = async (file, folder = 'uploads') => {
   if (!file || !file.path) {
     throw new Error('File is not provided or invalid');
@@ -34,7 +31,7 @@ export const saveFileToCloudinary = async (file, folder = 'uploads') => {
 
   try {
     const response = await cloudinary.v2.uploader.upload(file.path, { folder });
-    console.log('Cloudinary upload response:', response);
+    console.log('Cloudinary upload response:', response); // Для дебагінгу
     await deleteFile(file.path);
     return response.secure_url;
   } catch (error) {

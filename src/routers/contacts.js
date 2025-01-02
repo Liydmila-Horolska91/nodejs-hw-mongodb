@@ -15,6 +15,7 @@ import { upload } from '../middlewares/multer.js';
 
 const router = Router();
 router.use(authenticate);
+// const jsonParser = express.json();
 
 router.get('/', ctrlWrapper(getContactsCtrl));
 router.get('/:contactId', isValidId, ctrlWrapper(getContactByIdCtrl));
