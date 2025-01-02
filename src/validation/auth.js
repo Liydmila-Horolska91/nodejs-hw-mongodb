@@ -24,3 +24,8 @@ export const resetPasswordSchema = Joi.object({
   password: Joi.string().required(),
   token: Joi.string().required(),
 });
+
+// Додана схема confirmAuthSchema
+export const confirmAuthSchema = Joi.object({
+  token: Joi.string().required(),
+});
