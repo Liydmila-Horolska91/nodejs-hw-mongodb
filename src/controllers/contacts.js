@@ -85,16 +85,6 @@ export const patchContactCtrl = async (req, res, next) => {
     }
   }
 
-  // const updatedContact = await contactService.updateContact(
-  //   contactId,
-  //   req.body,
-  //   req.user._id,
-  // );
-
-  // if (!updatedContact) {
-  //   throw new createHttpError.NotFound('Contact not found');
-  // }
-
   const updatedContact = await contactService.updateContact(
     contactId,
     {
