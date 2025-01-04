@@ -12,7 +12,7 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { contactSchema, editContactSchema } from '../validation/contact.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/multer.js';
-import { bodyCleaner } from '../middlewares/bodyCleaner';
+import { bodyCleaner } from '../middlewares/bodyCleaner.js';
 
 const router = Router();
 router.use(authenticate);
