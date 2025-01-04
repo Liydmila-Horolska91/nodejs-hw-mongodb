@@ -1,4 +1,6 @@
 import path from 'node:path';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const SORT_ORDER = {
   ASC: 'asc',
@@ -22,7 +24,7 @@ export const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
 export const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'temp');
 
 export const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
-
+console.log("cloudname", process.env.CLOUDINARY_CLOUD_NAME);
 export const CLOUDINARY = {
   CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   API_KEY: process.env.CLOUDINARY_API_KEY,
