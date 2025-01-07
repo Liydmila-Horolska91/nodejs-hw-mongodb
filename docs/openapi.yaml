@@ -15,7 +15,7 @@ tags:
 
 servers:
   - url: "http://127.0.0.1:5003"
-  - url: https://nodejs-hw-mongodb-4vnp.onrender.com
+  - url: https://nodejs-hw-mongodb-8lit.onrender.com
 
 paths:
   /contacts:
