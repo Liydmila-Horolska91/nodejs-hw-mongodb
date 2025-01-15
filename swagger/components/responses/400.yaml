@@ -1,4 +1,4 @@
-description: Internal server Error
+description: Bad request error
 content:
   application/json:
     schema:
@@ -10,15 +10,19 @@ content:
       properties:
         status:
           type: integer
-          example: 500
+          example: 400
         message:
           type: string
-          example: Internal server Error
+          example: BadRequestError
         data:
           type: object
           required:
             - message
+            - errors
           properties:
             message:
               type: string
-              example: "Internal server Error"
+              example: Bad request, body parameters are incorrect
+            errors:
+              type: string
+              example: Field is required

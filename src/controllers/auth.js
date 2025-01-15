@@ -1,145 +1,99 @@
-import createHttpError from 'http-errors';
-import { ONE_DAY } from '../constans/index.js';
 import {
   registerUser,
   loginUser,
-  refreshSession,
   logoutUser,
-  requestResetToken,
+  refreshSession,
+  requestResetPassword,
   resetPassword,
-  loginOrRegister,
-} from '../services/auth.js';
-import { generateAuthUrl, validateCode } from '../utils/googleOAuth2.js';
+} from "../services/auth.js";
 
-export const registerUserCtrl = async (req, res) => {
-  const user = await registerUser(req.body);
+export async function registerController(req, res) {
+  const payload = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  };
 
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully registered user!',
-    data: user,
-  });
-};
+  const registeredUser = await registerUser(payload);
 
-export const loginUserCtrl = async (req, res) => {
+  res
+    .status(201)
+    .send({ status: 201, message: "Successfully registered a user!", data: registeredUser });
+}
+
+export async function loginController(req, res) {
   const { email, password } = req.body;
 
   const session = await loginUser(email, password);
 
-  res.cookie('refreshToken', session.refreshToken, {
+  res.cookie("sessionId", session._id, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: session.refreshTokenValidUntil,
   });
 
-  res.cookie('sessionId', session._id, {
+  res.cookie("refreshToken", session.refreshToken, {
     httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
+    expires: session.refreshTokenValidUntil,
   });
-
-  res.json({
-    status: 200,
-    message: 'Successfully logged in an user!',
-    data: {
-      accessToken: session.accessToken,
-    },
-  });
-};
-
-export const refreshSessionCtrl = async (req, res) => {
-  const { refreshToken } = req.cookies;
-
-  if (!refreshToken) {
-    throw createHttpError(401, 'Refresh token is missing');
-  }
-
-  const session = await refreshSession(refreshToken);
-
-  res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    expires: new Date(Date.now() + ONE_DAY),
-  });
-
-  res.cookie('sessionId', session._id, {
-    httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
-  });
-
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully refreshed a session!',
-    data: {
-      accessToken: session.accessToken,
-    },
-  });
-};
-
-export const logoutUserCtrl = async (req, res) => {
-  if (req.cookies.sessionId) {
-    await logoutUser(req.cookies.sessionId);
-  }
-
-  res.clearCookie('sessionId');
-  res.clearCookie('refreshToken');
-
-  res.status(204).send();
-};
-
-export const requestResetEmailCtrl = async (req, res) => {
-  await requestResetToken(req.body.email);
-
-  res.json({
-    message: 'Reset password email was successfully sent!',
-    status: 200,
-    data: {},
-  });
-};
-
-export const resetPasswordCtrl = async (req, res) => {
-  await resetPassword(req.body);
-
-  res.json({
-    message: 'Password was successfully reset!',
-    status: 200,
-    data: {},
-  });
-};
-
-export const getAuthUrlCtrl = async (req, res) => {
-  const url = generateAuthUrl();
 
   res.send({
     status: 200,
-    message: 'Successfully get Google OAuth url',
-    data: url,
-  });
-};
-
-export const confirmAuthCtrl = async (req, res) => {
-  const { code } = req.body;
-  const ticket = await validateCode(code);
-  const session = await loginOrRegister(ticket.payload);
-
-  res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    expires: new Date(Date.now() + ONE_DAY),
-  });
-
-  res.cookie('sessionId', session._id, {
-    httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
-  });
-
-  res.status(200).json({
-    status: 200,
-    message: 'Login with Google successfully!',
+    message: "Successfully logged in a user!",
     data: {
       accessToken: session.accessToken,
     },
   });
-};
+}
+
+export async function logoutController(req, res) {
+  const { sessionId } = req.cookies;
+
+  if (typeof sessionId === "string") {
+    await logoutUser(sessionId);
+  }
+
+  res.clearCookie("sessionId");
+  res.clearCookie("refreshToken");
+
+  res.status(204).end();
+}
+
+export async function refreshController(req, res) {
+  const { sessionId, refreshToken } = req.cookies;
+
+  const session = await refreshSession(sessionId, refreshToken);
+
+  res.cookie("sessionId", session._id, {
+    httpOnly: true,
+    expires: session.refreshTokenValidUntil,
+  });
+
+  res.cookie("refreshToken", session.refreshToken, {
+    httpOnly: true,
+    expires: session.refreshTokenValidUntil,
+  });
+
+  res.send({
+    status: 200,
+    message: "Successfully refreshed a session!",
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
+}
+
+export async function requestResetPasswordController(req, res) {
+  const { email } = req.body;
+
+  await requestResetPassword(email);
+
+  res.send({ status: 200, message: "Reset password email has been successfully sent.", data: {} });
+}
+
+export async function resetPasswordController(req, res) {
+  const { password, token } = req.body;
+
+  await resetPassword(password, token);
+
+  res.send({ status: 200, message: "Password has been successfully reset.", data: {} });
+}

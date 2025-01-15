@@ -1,59 +1,33 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
   version: 1.0.0
-  title: Contacts app
+  title: Contacts-app
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: This is a documentation of Contacts app
-
+  description: The documentation of Contacts-app
 tags:
   - name: Contacts
-    description: Operations about contacts.
-  - name: Auth
-    description: Auth operations.
-
+    description: Operations with contacts
 servers:
-  - url: "http://127.0.0.1:5003"
   - url: https://nodejs-hw-mongodb-klp9.onrender.com
+    description: Production server
+  - url: http://127.0.0.1:5003
+    description: Local server
 
 paths:
-  /contacts:
-     get:
-      $ref: ../swagger/paths/contacts/get.yaml
-    post:
-      $ref: ../swagger/paths/contacts/get.yaml
   /contacts/{contactId}:
-    delete:
-      $ref: ../swagger/paths/contacts/{id}/delete.yaml
+    get:
+      $ref: ../swagger/paths/contacts/{contactId}/get.yaml
     patch:
-      $ref: ../swagger/paths/contacts/{id}/patch.yaml
+      $ref: ../swagger/paths/contacts/{contactId}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{contactId}/delete.yaml
+  /contacts:
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
     get:
-      $ref: ../swagger/paths/contacts/{id}/get.yaml
-  /auth/register:
-    post:
-      $ref: ../swagger/paths/auth/register.yaml
-  /auth/login:
-    post:
-      $ref: ../swagger/paths/auth/login.yaml
-  /auth/refresh:
-    post:
-      $ref: ../swagger/paths/auth/refresh.yaml
-  /auth/logout:
-    post:
-      $ref: ../swagger/paths/auth/logout.yaml
-  /auth/send-reset-email:
-    post:
-      $ref: ../swagger/paths/auth/send-reset-email.yaml
-  /auth/reset-pwd:
-    post:
-      $ref: ../swagger/paths/auth/reset-pwd.yaml
-  /auth/get-oauth-url:
-    get:
-      $ref: ../swagger/paths/auth/get-oauth-url.yaml
-  /auth/confirm-oauth:
-    post:
-      $ref: ../swagger/paths/auth/confirm-oauth.yaml
+      $ref: ../swagger/paths/contacts/get.yaml
 
 components:
   securitySchemes:
